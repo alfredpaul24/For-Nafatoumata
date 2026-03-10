@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yassine Traoré — Mon Architecte de Vie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Serif+Display:ital@0;1&family=Caveat:wght@500;700&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --vert:       #0f7a52;
+      --vert-vif:   #1db87a;
+      --vert-pale:  #cff0e2;
+      --vert-deep:  #061f13;
+      --vert-mid:   #0d3d28;
+      --emeraude:   #00c47a;
+      --creme:      #f8f4ec;
+      --creme2:     #eee8d8;
+      --or:         #c8a23a;
+      --text:       #0a1a10;
+      --text-soft:  #4a7060;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--creme);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    #cur {
+      position: fixed; pointer-events: none; z-index: 9999;
+      font-size: 1.2rem;
+      transform: translate(-50%,-50%) rotate(-30deg);
+      transition: transform .1s;
+    }
+    #cur2 {
+      position: fixed; pointer-events: none; z-index: 9998;
+      width: 24px; height: 24px;
+      border: 1.5px solid var(--emeraude);
+      border-radius: 50%; opacity: .35;
+      transform: translate(-50%,-50%);
+      transition: left .22s ease, top .22s ease;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(50px);
+      transition: opacity .85s cubic-bezier(.16,1,.3,1), transform .85s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.from-left  { transform: translateX(-55px); }
+    .reveal.from-right { transform: translateX(55px); }
+    .reveal.pop        { transform: scale(.88); }
+    .reveal.visible    { opacity:1 !important; transform:none !important; }
+
+    #hero {
+      position: relative; min-height: 100vh;
+      background: var(--vert-deep);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; overflow: hidden;
+      padding: 80px 24px;
+    }
+
+    .blueprint-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,196,122,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,196,122,.07) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridPan 20s linear infinite;
+    }
+    @keyframes gridPan {
+      from { background-position: 0 0; }
+      to   { background-position: 50px 50px; }
+    }
+
+    .build-lines { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .bl { position: absolute; background: rgba(0,196,122,.12); animation: drawLine ease-in-out infinite alternate; }
+    .bl.h { height: 1px; animation-name: drawLineH; }
+    .bl.v { width: 1px; animation-name: drawLineV; }
+    .bl:nth-child(1)  { width:0; top:20%; left:5%; animation-duration:3s; animation-delay:0s; }
+    .bl:nth-child(2)  { width:0; top:60%; left:30%; animation-duration:4s; animation-delay:.5s; }
+    .bl:nth-child(3)  { width:0; top:80%; left:10%; animation-duration:3.5s; animation-delay:1s; }
+    .bl:nth-child(4)  { height:0; left:15%; top:5%; animation-duration:3s; animation-delay:.3s; }
+    .bl:nth-child(5)  { height:0; left:75%; top:20%; animation-duration:4s; animation-delay:.8s; }
+    .bl:nth-child(6)  { height:0; left:90%; top:40%; animation-duration:3.5s; animation-delay:1.2s; }
+    @keyframes drawLineH { from{width:0;opacity:0} to{width:200px;opacity:1} }
+    @keyframes drawLineV { from{height:0;opacity:0} to{height:150px;opacity:1} }
+
+    .corner { position: absolute; width:30px; height:30px; border-color: rgba(0,196,122,.4); border-style: solid; opacity: .6; }
+    .corner.tl { top:40px; left:40px; border-width:2px 0 0 2px; }
+    .corner.tr { top:40px; right:40px; border-width:2px 2px 0 0; }
+    .corner.bl { bottom:40px; left:40px; border-width:0 0 2px 2px; }
+    .corner.br { bottom:40px; right:40px; border-width:0 2px 2px 0; }
+
+    .blob { position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; }
+    .b1 { width:600px; height:600px; background:rgba(0,196,122,.12); top:-150px; right:-150px; animation:blobDrift 10s ease-in-out infinite alternate; }
+    .b2 { width:400px; height:400px; background:rgba(200,162,58,.08); bottom:-100px; left:-100px; animation:blobDrift 12s ease-in-out infinite alternate-reverse; }
+    @keyframes blobDrift { from{transform:translate(0,0)} to{transform:translate(50px,40px)} }
+
+    .hero-content { position:relative; z-index:3; }
+
+    .hero-badge {
+      display: inline-flex; align-items:center; gap:8px;
+      padding: 8px 20px;
+      background: rgba(0,196,122,.12);
+      border: 1px solid rgba(0,196,122,.3);
+      border-radius: 4px;
+      font-family: 'Space Mono', monospace;
+      font-size: .72rem; letter-spacing: .15em;
+      color: var(--emeraude); margin-bottom: 32px;
+      animation: fadeIn .6s ease both;
+    }
+    .hero-badge::before { content:'▶'; font-size:.6rem; }
+
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(4rem,13vw,10rem);
+      line-height: .88; color: var(--creme);
+      animation: fadeIn .7s .1s ease both;
+      letter-spacing: -.02em;
+    }
+    .hero-name .line2 {
+      display: block; font-style: italic;
+      color: var(--emeraude);
+      font-size: clamp(2.2rem,7vw,5.5rem);
+      letter-spacing: .02em;
+    }
+
+    .hero-annot {
+      margin-top: 28px;
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.2rem,3vw,1.8rem);
+      color: var(--or);
+      animation: fadeIn .7s .25s ease both;
+      position: relative; display: inline-block;
+    }
+    .hero-annot::before, .hero-annot::after {
+      content: ''; position:absolute; top:50%;
+      width:40px; height:1px; background:var(--or); opacity:.5;
+    }
+    .hero-annot::before { right:calc(100% + 12px); }
+    .hero-annot::after  { left:calc(100% + 12px); }
+
+    .badge-f {
+      position:absolute; z-index:2;
+      background:var(--creme); border-radius:6px;
+      padding:10px 16px; font-size:.8rem; font-weight:700;
+      color:var(--vert-deep); box-shadow:0 8px 30px rgba(0,0,0,.3);
+      animation:floatBadge ease-in-out infinite;
+      font-family:'Space Mono',monospace;
+      border-left:3px solid var(--emeraude);
+    }
+    .bf1 { top:16%; left:3%; animation-duration:5s; }
+    .bf2 { top:20%; right:3%; animation-duration:6s; animation-delay:.7s; }
+    .bf3 { bottom:20%; left:5%; animation-duration:5.5s; animation-delay:1.2s; }
+    .bf4 { bottom:16%; right:4%; animation-duration:4.8s; animation-delay:.3s; }
+    @keyframes floatBadge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+    .scroll-cue {
+      position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
+      z-index:3; display:flex; flex-direction:column; align-items:center; gap:6px;
+      color:var(--emeraude); opacity:.55;
+      font-family:'Space Mono',monospace; font-size:.65rem; letter-spacing:.2em;
+    }
+    .scroll-line { width:1px; height:40px; background:linear-gradient(to bottom,var(--emeraude),transparent); animation:scLine 2s ease-in-out infinite; }
+    @keyframes scLine { 0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(.5)} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none} }
+
+    @media(max-width:600px){ .badge-f{display:none;} }
+
+    #about { background: var(--creme); padding: 120px 40px; position: relative; overflow: hidden; }
+    #about::before {
+      content: 'ARCHI'; position:absolute; right:-30px; top:50%;
+      transform:translateY(-50%) rotate(90deg);
+      font-family:'DM Serif Display',serif; font-size:11rem; font-weight:700; font-style:italic;
+      color:var(--vert-pale); opacity:.4; pointer-events:none; white-space:nowrap;
+    }
+    .about-inner { max-width:880px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+    .about-tag { font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--emeraude); margin-bottom:16px; }
+    .about-title { font-family:'DM Serif Display',serif; font-size:clamp(2.4rem,6vw,4rem); font-style:italic; color:var(--vert); line-height:1.05; margin-bottom:28px; }
+    .about-title span { color:var(--or); font-style:normal; }
+    .about-text { font-size:1.1rem; line-height:2; color:var(--text-soft); font-weight:400; }
+    .about-text strong { color:var(--vert); font-weight:700; }
+    .about-right { display:flex; flex-direction:column; gap:16px; }
+    .stat-block {
+      background:var(--vert-deep); border-radius:16px; padding:28px 28px;
+      display:flex; align-items:center; gap:20px;
+      border-left:3px solid var(--emeraude);
+      transition:transform .3s, box-shadow .3s;
+    }
+    .stat-block:hover { transform:translateX(8px); box-shadow:0 8px 30px rgba(0,196,122,.15); }
+    .stat-icon { font-size:2rem; flex-shrink:0; }
+    .stat-num { font-family:'DM Serif Display',serif; font-size:2rem; font-style:italic; color:var(--emeraude); line-height:1; }
+    .stat-lbl { font-size:.82rem; color:rgba(207,240,226,.55); margin-top:3px; letter-spacing:.06em; }
+    @media(max-width:650px){ .about-inner{grid-template-columns:1fr;gap:40px;} #about::before{display:none;} }
+
+    .ticker-wrap { background:var(--emeraude); padding:14px 0; overflow:hidden; white-space:nowrap; }
+    .ticker { display:inline-flex; animation:ticker 20s linear infinite; }
+    .ticker-item { font-family:'DM Serif Display',serif; font-size:1.2rem; font-style:italic; color:var(--vert-deep); padding:0 28px; flex-shrink:0; }
+    .ticker-dot { color:var(--vert-deep); opacity:.4; padding:0 4px; }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    #qualities { background: var(--vert-mid); padding: 110px 24px; overflow:hidden; }
+    .sec-head { text-align:center; margin-bottom:56px; }
+    .sec-lbl { font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--emeraude); margin-bottom:10px; }
+    .sec-title { font-family:'DM Serif Display',serif; font-size:clamp(2rem,4vw,3rem); color:var(--creme); }
+    .sec-title::after { content:''; display:block; width:40px; height:2px; background:var(--emeraude); margin:14px auto 0; }
+    .q-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; max-width:960px; margin:0 auto; }
+    .q-card {
+      background:rgba(255,255,255,.04); border:1px solid rgba(0,196,122,.15);
+      border-radius:0; padding:32px 26px; position:relative; overflow:hidden;
+      transition:transform .3s, background .3s, border-color .3s;
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+    }
+    .q-card::before {
+      content:''; position:absolute; top:0; right:0;
+      border-style:solid; border-width:0 16px 16px 0;
+      border-color:transparent var(--vert-deep) transparent transparent;
+    }
+    .q-card:hover { background:rgba(0,196,122,.08); border-color:var(--emeraude); transform:translateY(-6px); }
+    .q-card-num { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--emeraude); opacity:.6; margin-bottom:14px; letter-spacing:.15em; }
+    .q-card-icon { font-size:2.2rem; margin-bottom:12px; }
+    .q-card-name { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--creme); margin-bottom:10px; }
+    .q-card-desc { font-size:.9rem; line-height:1.8; color:rgba(207,240,226,.55); }
+
+    #gallery { background:var(--vert-deep); padding:110px 24px; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:260px; gap:12px; max-width:960px; margin:0 auto; }
+    .g-item { position:relative; overflow:hidden; border:1px solid rgba(0,196,122,.1); }
+    .g-item::before, .g-item::after {
+      content:''; position:absolute; z-index:2; width:14px; height:14px;
+      border-color:var(--emeraude); border-style:solid; opacity:.5; transition:opacity .3s;
+    }
+    .g-item::before { top:8px; left:8px; border-width:2px 0 0 2px; }
+    .g-item::after  { bottom:8px; right:8px; border-width:0 2px 2px 0; }
+    .g-item:hover::before, .g-item:hover::after { opacity:1; }
+    .g-item:nth-child(1) { grid-column:1/3; grid-row:1/2; }
+    .g-item:nth-child(5) { grid-column:2/4; grid-row:2/3; }
+    .g-item:nth-child(9) { grid-column:1/3; grid-row:4/5; }
+    .g-item img { width:100%; border-radius:15px;height:100%; object-fit:cover; display:block; transition:transform .6s cubic-bezier(.16,1,.3,1), filter .4s; filter:saturate(.9); }
+    .g-item:hover img { transform:scale(1.06); filter:saturate(1.1); }
+    .g-overlay { position:absolute; inset:0; z-index:1; background:linear-gradient(to top, rgba(6,31,19,.7) 0%, transparent 50%); opacity:0; transition:opacity .4s; display:flex; align-items:flex-end; padding:14px; }
+    .g-item:hover .g-overlay { opacity:1; }
+    .g-coord { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--emeraude); letter-spacing:.1em; }
+    @media(max-width:600px){
+      .gallery-grid { grid-template-columns:repeat(2,1fr); grid-auto-rows:180px; }
+      .g-item:nth-child(1),.g-item:nth-child(5),.g-item:nth-child(9){ grid-column:auto; grid-row:auto; }
+    }
+
+    #videos { background:var(--creme2); padding:110px 24px; }
+    .video-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; max-width:900px; margin:0 auto; }
+    .video-grid video { width:100%; border-radius:15px; border:1px solid rgba(0,196,122,.2); background:#000; box-shadow:0 8px 40px rgba(0,0,0,.15); transition:transform .3s, box-shadow .3s; }
+    .video-grid video:hover { transform:translateY(-4px); box-shadow:0 14px 50px rgba(0,196,122,.2); }
+    @media(max-width:400px){ .video-grid{grid-template-columns:1fr;} }
+
+    #letter { background: var(--vert-mid); padding: 120px 40px; position:relative; overflow:hidden; }
+    #letter::before { content:''; position:absolute; inset:0; pointer-events:none; background-image: linear-gradient(rgba(0,196,122,.05) 1px, transparent 1px); background-size: 100% 36px; }
+    #letter::after { content:'LETTRE'; position:absolute; right:-20px; bottom:60px; font-family:'DM Serif Display',serif; font-size:8rem; font-weight:700; font-style:italic; color:rgba(0,196,122,.06); pointer-events:none; white-space:nowrap; }
+    .letter-wrap { max-width:680px; margin:0 auto; position:relative; z-index:1; }
+    .letter-tag { font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--emeraude); margin-bottom:14px; }
+    .letter-title { font-family:'DM Serif Display',serif; font-size:clamp(2.2rem,5vw,3.5rem); font-style:italic; color:var(--creme); margin-bottom:40px; line-height:1.05; }
+    .letter-title span { color:var(--emeraude); font-style:normal; }
+    .letter-paper { background:rgba(255,255,255,.04); border:1px solid rgba(0,196,122,.2); border-radius:0; padding:44px 40px; position:relative; clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
+    .letter-paper::before { content:''; position:absolute; top:0; right:0; border-style:solid; border-width:0 24px 24px 0; border-color:transparent var(--vert-mid) transparent transparent; }
+    .l-greeting { font-family:'Caveat',cursive; font-size:2rem; color:var(--emeraude); margin-bottom:24px; }
+    .l-body { font-size:1.08rem; line-height:2.1; color:rgba(207,240,226,.75); font-weight:300; white-space:pre-line; }
+    .l-body strong { color:var(--creme); font-weight:700; }
+    .l-sig { font-family:'Caveat',cursive; font-size:1.8rem; color:var(--or); margin-top:36px; display:block; }
+
+    #quotes { background:var(--vert-deep); padding:110px 40px; }
+    .quotes-inner { max-width:800px; margin:0 auto; }
+    .q-item { padding:36px 0; border-bottom:1px solid rgba(0,196,122,.12); display:grid; grid-template-columns:80px 1fr; gap:20px; }
+    .q-item:last-child { border-bottom:none; }
+    .q-idx { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--emeraude); opacity:.5; letter-spacing:.12em; padding-top:6px; }
+    .q-text { font-family:'DM Serif Display',serif; font-size:1.2rem; font-style:italic; line-height:1.9; color:var(--creme); }
+    .q-auth { display:block; margin-top:10px; font-family:'Space Mono',monospace; font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--emeraude); font-style:normal; }
+
+    #love { background: var(--creme); padding:120px 24px; text-align:center; position:relative; overflow:hidden; }
+    #love::before { content:''; position:absolute; inset:0; background-image: linear-gradient(rgba(0,196,122,.05) 1px, transparent 1px), linear-gradient(90deg,rgba(0,196,122,.05) 1px, transparent 1px); background-size:40px 40px; }
+    .love-inner { position:relative; z-index:1; }
+    .love-title { font-family:'DM Serif Display',serif; font-size:clamp(2rem,5vw,3.5rem); font-style:italic; color:var(--vert); margin-bottom:12px; }
+    .love-sub { font-family:'Space Mono',monospace; font-size:.75rem; letter-spacing:.18em; color:var(--text-soft); text-transform:uppercase; margin-bottom:44px; }
+    .btn-love {
+      display:inline-flex; align-items:center; gap:14px; padding:20px 52px;
+      background:var(--vert); color:var(--creme); font-family:'Syne',sans-serif;
+      font-size:1rem; font-weight:700; letter-spacing:.06em;
+      border:none; border-radius:0; cursor:none;
+      box-shadow:0 8px 40px rgba(15,122,82,.35);
+      transition:transform .25s, box-shadow .25s, background .2s;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+    }
+    .btn-love:hover { background:var(--emeraude); transform:translateY(-4px) scale(1.03); box-shadow:0 14px 50px rgba(0,196,122,.4); }
+    .spark { position:fixed; pointer-events:none; z-index:999; animation:sparkUp 2.6s ease forwards; }
+    @keyframes sparkUp { 0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);} 100%{opacity:0;transform:translateY(-320px) rotate(60deg) scale(1.6);} }
+
+    footer { background:var(--vert-deep); padding:56px 24px; text-align:center; border-top:1px solid rgba(0,196,122,.1); position:relative; }
+    footer::before { content:''; position:absolute; inset:0; background-image: linear-gradient(rgba(0,196,122,.04) 1px, transparent 1px), linear-gradient(90deg,rgba(0,196,122,.04) 1px,transparent 1px); background-size:40px 40px; }
+    .f-name { font-family:'DM Serif Display',serif; font-size:2.2rem; font-style:italic; color:var(--creme); margin-bottom:10px; position:relative; z-index:1; }
+    .f-name span { color:var(--emeraude); }
+    .f-sub { font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(0,196,122,.45); position:relative; z-index:1; }
+  </style>
+</head>
+<body>
+
+<div id="cur">✏️</div>
+<div id="cur2"></div>
+
+<section id="hero">
+  <div class="blueprint-grid"></div>
+  <div class="build-lines">
+    <div class="bl h"></div><div class="bl h"></div><div class="bl h"></div>
+    <div class="bl v"></div><div class="bl v"></div><div class="bl v"></div>
+  </div>
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <div class="blob b1"></div><div class="blob b2"></div>
+
+  <div class="badge-f bf1">🌸 Aime les fleurs</div>
+  <div class="badge-f bf2">📐 Architecture</div>
+  <div class="badge-f bf3">📷 Photographe</div>
+  <div class="badge-f bf4">✦ Yassine</div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Pour ma meilleure-amie Pniky(forever)🌸 </div>
+    <h1 class="hero-name">
+      Yassine
+      <span class="line2">Traoré🌸</span>
+    </h1>
+    <p class="hero-annot">Mon architecte de vie préférée 🌿</p>
+  </div>
+
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>↓ explorer</span>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-inner">
+    <div class="about-left reveal from-left">
+      <p class="about-tag">portrait · yassine traoré</p>
+      <h2 class="about-title">Elle construit<br>tout ce qu'elle <span>touche</span></h2>
+      <p class="about-text">
+        Étudiante en architecture — mais bien avant les plans et les maquettes,
+        <strong>elle a d'abord su construire les meilleures amitiés</strong>.<br><br>
+        Yassine, c'est quelqu'un qui voit le monde différemment. Là où les autres voient des murs,
+        elle voit des possibilités. À travers son objectif ou dans chaque fleur qu'elle admire,
+        elle capte la beauté que les autres manquent.<br><br>
+        Et dans ma vie, <strong>elle a érigé quelque chose d'irremplaçable</strong>.
+      </p>
+    </div>
+    <div class="about-right reveal from-right">
+      <div class="stat-block">
+        <span class="stat-icon">📐</span>
+        <div>
+          <div class="stat-num">∞</div>
+          <div class="stat-lbl">passion pour l'architecture</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <span class="stat-icon">🌸</span>
+        <div>
+          <div class="stat-num">∞</div>
+          <div class="stat-lbl">amour pour les fleurs</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <span class="stat-icon">📷</span>
+        <div>
+          <div class="stat-num">∞</div>
+          <div class="stat-lbl">instants capturés</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <span class="stat-icon">💚</span>
+        <div>
+          <div class="stat-num">01</div>
+          <div class="stat-lbl">meilleure amie unique</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Architecte du futur</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Ma meilleure amie</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Yassine Traoré🌸</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Aime les fleurs</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Œil de photographe</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Unique & précieuse</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Architecte du futur</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Ma meilleure amie</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Yassine Traoré</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Aime les fleurs</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Œil de photographe</span><span class="ticker-dot">◆</span>
+    <span class="ticker-item">Unique & précieuse</span><span class="ticker-dot">◆</span>
+  </div>
+</div>
+
+<section id="qualities">
+  <div class="sec-head">
+    <p class="sec-lbl reveal">qualités · yassine🌸</p>
+    <h2 class="sec-title reveal">Ce qui fait d'elle<br>une œuvre unique</h2>
+  </div>
+  <div class="q-grid">
+    <div class="q-card reveal">
+      <div class="q-card-num">01</div>
+      <div class="q-card-icon">📐</div>
+      <div class="q-card-name">Son œil d'architecte</div>
+      <p class="q-card-desc">Elle voit la beauté là où personne ne regarde. Chaque détail compte pour elle — dans les plans comme dans la vie.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">02</div>
+      <div class="q-card-icon">🌸</div>
+      <div class="q-card-name">Son amour des fleurs</div>
+      <p class="q-card-desc">Elle voit dans chaque fleur une beauté que les autres ignorent. Une sensibilité rare qui dit tout de son âme.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">03</div>
+      <div class="q-card-icon">📷</div>
+      <div class="q-card-name">Son œil de photographe</div>
+      <p class="q-card-desc">Elle capture les instants avant qu'ils s'envolent. Sa façon de cadrer le monde révèle une sensibilité hors du commun.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">04</div>
+      <div class="q-card-icon">🌿</div>
+      <div class="q-card-name">Sa fraîcheur naturelle</div>
+      <p class="q-card-desc">Comme une plante qui pousse vers la lumière — elle avance, elle grandit, elle embellit tout autour d'elle.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">05</div>
+      <div class="q-card-icon">🔥</div>
+      <div class="q-card-name">Sa passion dévorante</div>
+      <p class="q-card-desc">Quand Yassine aime quelque chose — ses études, ses amis, ses projets — elle s'y donne à 300%.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">06</div>
+      <div class="q-card-icon">😄</div>
+      <div class="q-card-name">Son humour</div>
+      <p class="q-card-desc">Elle a ce rire et cette façon de dire les choses qui transforme même les journées les plus ordinaires en souvenirs.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">07</div>
+      <div class="q-card-icon">🏗️</div>
+      <div class="q-card-name">Sa résilience</div>
+      <p class="q-card-desc">Les études d'archi, c'est des nuits blanches, des plans refaits 10 fois. Elle tient. Toujours. C'est admirable.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">08</div>
+      <div class="q-card-icon">💚</div>
+      <div class="q-card-name">Sa loyauté</div>
+      <p class="q-card-desc">Elle est là. Vraiment là. Pas juste dans les bons moments — dans les vrais moments. C'est rare.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">09</div>
+      <div class="q-card-icon">✨</div>
+      <div class="q-card-name">Sa créativité</div>
+      <p class="q-card-desc">Son esprit ne s'arrête jamais. Elle voit des solutions là où les autres voient des problèmes. Pur génie.</p>
+    </div>
+    <div class="q-card reveal">
+      <div class="q-card-num">10</div>
+      <div class="q-card-icon">👑</div>
+      <div class="q-card-name">Son élégance naturelle</div>
+      <p class="q-card-desc">Pas besoin d'effort. Elle a cette classe innée qui fait qu'on la remarque sans qu'elle cherche à l'être.</p>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="sec-head">
+    <p class="sec-lbl reveal" style="color:var(--emeraude);">Nafatoumata En Images</p>
+    <h2 class="sec-title reveal">Just Nafa 📸</h2>
+  </div>
+  <div class="gallery-grid reveal pop">
+    <div class="g-item"><img src="Y1.jpg" alt="1"><div class="g-overlay"><span class="g-coord">souvenir 001</span></div></div>
+    <div class="g-item"><img src="Y2.jpg" alt="2"><div class="g-overlay"><span class="g-coord">souvenir 002</span></div></div>
+    <div class="g-item"><img src="Y3.jpg" alt="3"><div class="g-overlay"><span class="g-coord">souvenir 003</span></div></div>
+    <div class="g-item"><img src="Y4.jpg" alt="4"><div class="g-overlay"><span class="g-coord">souvenir 004</span></div></div>
+    <div class="g-item"><img src="Y5.jpg" alt="5"><div class="g-overlay"><span class="g-coord">souvenir 005</span></div></div>
+    <div class="g-item"><img src="Y6.jpg" alt="6"><div class="g-overlay"><span class="g-coord">souvenir 006</span></div></div>
+    <div class="g-item"><img src="Y7.jpg" alt="7"><div class="g-overlay"><span class="g-coord">souvenir 007</span></div></div>
+    <div class="g-item"><img src="Y8.jpg" alt="8"><div class="g-overlay"><span class="g-coord">souvenir 008</span></div></div>
+    <div class="g-item"><img src="Y9.jpg" alt="9"><div class="g-overlay"><span class="g-coord">souvenir 009</span></div></div>
+    <div class="g-item"><img src="Y10.jpg" alt="10"><div class="g-overlay"><span class="g-coord">souvenir 010</span></div></div>
+    <div class="g-item"><img src="Y11.jpg" alt="11"><div class="g-overlay"><span class="g-coord">souvenir 011</span></div></div>
+    <div class="g-item"><img src="Y12.jpg" alt="12"><div class="g-overlay"><span class="g-coord">souvenir 012</span></div></div>
+    <div class="g-item"><img src="Y13.jpg" alt="13"><div class="g-overlay"><span class="g-coord">souvenir 013</span></div></div>
+    <div class="g-item"><img src="Y14.jpg" alt="14"><div class="g-overlay"><span class="g-coord">souvenir 014</span></div></div>
+    </div>
+</section>
+
+<section id="videos">
+  <div class="sec-head">
+    <p class="sec-lbl reveal" style="color:var(--vert);">Yassine En Vidéos</p>
+    <h2 class="sec-title reveal" style="color:var(--text);">It's Yasssssssss 🎬</h2>
+  </div>
+  <div class="video-grid reveal">
+    <video controls><source src="V1.mp4" type="video/mp4"></video>
+    <video controls><source src="V2.mp4" type="video/mp4"></video>
+    <video controls><source src="V3.mp4" type="video/mp4"></video>
+    <video controls><source src="V4.mp4" type="video/mp4"></video>
+    <video controls><source src="V5.mp4" type="video/mp4"></video>
+    <video controls><source src="V6.mp4" type="video/mp4"></video>
+    <video controls><source src="V7.mp4" type="video/mp4"></video>
+    <video controls><source src="V8.mp4" type="video/mp4"></video>
+    <video controls><source src="V9.mp4" type="video/mp4"></video>
+    </div>
+</section>
+
+<section id="letter">
+  <div class="letter-wrap">
+    <div class="reveal">
+      <p class="letter-tag">lettre · pour yassine🌸</p>
+      <h2 class="letter-title">Depuis le fond<br>de <span>mon cœur</span></h2>
+    </div>
+    <div class="letter-paper reveal">
+      <p class="l-greeting">Ma chère Yassine🌸,</p>
+      <p class="l-body">Tu étudies l'architecture — l'art de concevoir des espaces qui font du bien à vivre.
+Mais ce que tu ne réalises peut-être pas, c'est que <strong>tu fais ça dans ma vie aussi</strong>.
+
+Tu as construit quelque chose de solide entre nous.
+Pas avec du béton ou de l'acier — avec de la confiance, des fous rires, des moments vrais.
+<strong>Une amitié bien pensée, bien dosée, bien érigée.</strong>
+
+Tu as aussi ce don rare de voir la beauté là où les autres passent sans regarder.
+Dans une fleur qui s'ouvre, dans la lumière d'un matin, dans un visage au bon moment —
+<strong>tu captures ce que les autres ratent.</strong>
+
+Je regarde ce que tu fais dans tes études et je suis émerveillé(e).
+Les nuits blanches sur les plans, les maquettes qu'on recommence, les rendus sous pression —
+tu traverses tout ça avec une grâce que j'admire profondément.
+
+Tu vas devenir une architecte incroyable, j'en suis certain(e).
+Mais tu es déjà quelqu'un d'incroyable.
+
+<strong>Merci d'exister dans ma vie exactement comme tu le fais.</strong></p>
+      <span class="l-sig">— Ton Pote Kholore 🌿</span>
+    </div>
+  </div>
+</section>
+
+<section id="quotes">
+  <div class="quotes-inner">
+    <div class="sec-head">
+      <p class="sec-lbl reveal" style="color:var(--emeraude);">citations · pour toi</p>
+      <h2 class="sec-title reveal">Des mots pour toi</h2>
+    </div>
+    <div class="q-item reveal">
+      <span class="q-idx">01</span>
+      <div><p class="q-text">L'architecture, c'est construire des rêves en dur. Et toi, tu en construis partout où tu passes.</p><span class="q-auth">— pour Yassine</span></div>
+    </div>
+    <div class="q-item reveal">
+      <span class="q-idx">02</span>
+      <div><p class="q-text">Une fleur ne pense pas à s'épanouir — elle s'épanouit. Et toi, tu fais pareil, naturellement.</p><span class="q-auth">— pour toi</span></div>
+    </div>
+    <div class="q-item reveal">
+      <span class="q-idx">03</span>
+      <div><p class="q-text">La photographie, c'est l'art d'être présent au bon moment. Et toi, tu l'es — toujours au bon moment.</p><span class="q-auth">— anonyme</span></div>
+    </div>
+    <div class="q-item reveal">
+      <span class="q-idx">04</span>
+      <div><p class="q-text">Les plus belles structures ne sont pas celles qu'on voit — ce sont celles qu'on ressent. Tu en es la preuve.</p><span class="q-auth">— de tout mon cœur</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="love">
+  <div class="love-inner">
+    <h2 class="love-title reveal">Envoie-lui tout l'amour du monde</h2>
+    <p class="love-sub reveal">meilleure amie · architecte · photographe · fleurs</p>
+    <button class="btn-love reveal" onclick="loveRain()">
+      🌿 Envoyer de l'amour 🌿
+    </button>
+  </div>
+</section>
+
+<footer>
+  <p class="f-name">Yassine <span>Traoré🌸</span></p>
+  <p class="f-sub">Meilleure-Amie · Architecte · Unique · Forever</p>
+</footer>
+
+<script>
+  const cur  = document.getElementById('cur');
+  const cur2 = document.getElementById('cur2');
+  document.addEventListener('mousemove', e => {
+    cur.style.left  = e.clientX + 'px';
+    cur.style.top   = e.clientY + 'px';
+    setTimeout(() => { cur2.style.left = e.clientX+'px'; cur2.style.top = e.clientY+'px'; }, 100);
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), (i % 4) * 90);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: .1, rootMargin:'0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  const SPARKS = ['🌸','🌺','📷','💚','📐','⭐','🌷','💫','🌼','🌿','👑','🎉'];
+  function loveRain() { for(let i=0;i<22;i++) setTimeout(spawnSpark, i*65); }
+  function spawnSpark() {
+    const el = document.createElement('div');
+    el.className = 'spark';
+    el.textContent = SPARKS[Math.floor(Math.random()*SPARKS.length)];
+    el.style.left   = (5 + Math.random()*90) + 'vw';
+    el.style.bottom = '80px';
+    el.style.fontSize = (1.2 + Math.random()*2.2) + 'rem';
+    el.style.animationDuration = (2 + Math.random()*1.8) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+  document.addEventListener('click', spawnSpark);
+</script>
+</body>
+</html>
